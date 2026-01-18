@@ -1,0 +1,21 @@
+services:
+  - type: web
+    name: can-app
+    env: python
+    buildCommand: pip install -r requirements.txt && python manage.py collectstatic --noinput
+    startCommand: gunicorn can.wsgi:application
+    envVars:
+      - key: DATABASE_URL
+        sync: false
+      - key: SECRET_KEY
+        generateValue: true
+      - key: DEBUG
+        value: False
+      - key: ALLOWED_HOSTS
+        value: can-app.onrender.com
+      - key: PYTHON_VERSION
+        value: 3.9.12
+
+databases:
+  - name: can-db
+    plan: free

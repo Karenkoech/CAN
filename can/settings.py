@@ -2,7 +2,6 @@
 import os
 from pathlib import Path
 import dj_database_url
-import django_on_heroku
 from decouple import config
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -13,13 +12,13 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-x62(^ef=i-^eqc%@$-_8jf5j=%6#fcw@23u9dcu75myod(ud=)'
+SECRET_KEY = config('SECRET_KEY')
 
 
 # # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = config('DEBUG', default=False, cast=bool)
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='').split(',')
 
 
 # # Application definition
@@ -75,13 +74,10 @@ WSGI_APPLICATION = 'can.wsgi.application'
 
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'can',
-        'USER': 'moringa',
-        'PASSWORD': 'can',
- 
-    }
+    'default': dj_database_url.config(
+        default=config('DATABASE_URL'),
+        conn_max_age=600
+    )
 }
 
 
@@ -136,6 +132,3 @@ LOGIN_REDIRECT_URL = 'home_view'
 LOGIN_URL = 'login'
 
 CRISPY_TEMPLATE_PACK='bootstrap4'
-
-
-django_on_heroku.settings(locals())
