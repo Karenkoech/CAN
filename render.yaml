@@ -2,6 +2,7 @@ services:
   - type: web
     name: can-app
     env: python
+    plan: free
     buildCommand: pip install -r requirements.txt && python manage.py collectstatic --noinput
     startCommand: gunicorn can.wsgi:application
     envVars:
